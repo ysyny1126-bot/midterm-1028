@@ -96,10 +96,11 @@
   <!-- 기능 1: 대출 -->
   <section class="card c-borrow">
     <h2><span class="badge">🐰</span>책 빌리기</h2>
+    <p class="hint">📅 <b>며칠째</b> = 도서관 문을 연 날을 1일째로 센 날짜예요. 여기엔 <b>빌리는 날</b>을 넣어요.<br>반납 기한은 빌린 날 + 14일째 (예: 1일째에 빌리면 15일째까지)</p>
     <div class="fields">
       <label>책 번호<input id="b-book" list="books" placeholder="B001" autocomplete="off"></label>
       <label>이름<input id="b-name" placeholder="김민수" autocomplete="off"></label>
-      <label class="wide">며칠째<input id="b-day" placeholder="1" inputmode="numeric" autocomplete="off"></label>
+      <label class="wide">며칠째 (빌리는 날)<input id="b-day" placeholder="예: 1" inputmode="numeric" autocomplete="off"></label>
     </div>
     <div class="chips" data-for="b-book"></div>
     <button class="b-borrow full" data-act="borrow">빌릴래요 ♡</button>
@@ -108,10 +109,11 @@
   <!-- 기능 3: 반납 -->
   <section class="card c-return">
     <h2><span class="badge">🐻</span>책 돌려주기</h2>
+    <p class="hint">📅 <b>며칠째</b>에는 <b>돌려주는 날</b>을 넣어요. 반납 기한이 지나면 지난 날수만큼 연체예요.<br>(예: 15일째까지인 책을 18일째에 돌려주면 연체 3일)</p>
     <div class="fields">
       <label>책 번호<input id="r-book" list="books" placeholder="B001" autocomplete="off"></label>
       <label>이름<input id="r-name" placeholder="김민수" autocomplete="off"></label>
-      <label class="wide">며칠째<input id="r-day" placeholder="10" inputmode="numeric" autocomplete="off"></label>
+      <label class="wide">며칠째 (돌려주는 날)<input id="r-day" placeholder="예: 10" inputmode="numeric" autocomplete="off"></label>
     </div>
     <div class="chips" data-for="r-book"></div>
     <button class="b-return full" data-act="ret">돌려줄게요 ✿</button>
