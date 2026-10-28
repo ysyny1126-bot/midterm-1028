@@ -72,6 +72,10 @@
   ul.loans .bk { font-family:"Jua", sans-serif; font-size:1.1rem; }
   ul.loans .due { margin-left:auto; background:var(--yellow); color:#5a4500; padding:2px 10px; border-radius:999px; font-size:.9rem; }
   .empty { color:var(--muted); text-align:center; margin:12px 0 0; }
+  .chips { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-top:10px; font-size:.82rem; color:var(--muted); }
+  .chips button.chip { font-family:"Gowun Dodum", sans-serif; font-size:.9rem; padding:5px 12px; border-radius:999px; color:var(--text);
+                       background:var(--bg); border:2px solid var(--line); box-shadow:none; }
+  .chips button.chip.on { background:var(--yellow); border-color:#f2c94c; color:#5a4500; }
   .hint { margin:-4px 0 8px; font-size:.9rem; color:var(--muted); word-break:keep-all; }
   .hint b { color:var(--sky-d); }
   footer { text-align:center; margin-top:8px; }
@@ -97,6 +101,7 @@
       <label>이름<input id="b-name" placeholder="김민수" autocomplete="off"></label>
       <label class="wide">며칠째<input id="b-day" placeholder="1" inputmode="numeric" autocomplete="off"></label>
     </div>
+    <div class="chips" data-for="b-book"></div>
     <button class="b-borrow full" data-act="borrow">빌릴래요 ♡</button>
   </section>
 
@@ -108,6 +113,7 @@
       <label>이름<input id="r-name" placeholder="김민수" autocomplete="off"></label>
       <label class="wide">며칠째<input id="r-day" placeholder="10" inputmode="numeric" autocomplete="off"></label>
     </div>
+    <div class="chips" data-for="r-book"></div>
     <button class="b-return full" data-act="ret">돌려줄게요 ✿</button>
   </section>
 
@@ -147,7 +153,7 @@ def call(fn, *args):
         return json.dumps({"ok": False, "error": f"{type(e).__name__}: {e}"}, ensure_ascii=False)
 `);
   document.getElementById("status").textContent = "🌷 준비 완료! 책을 빌려 보세요";
-  document.querySelectorAll("button").forEach(b => b.disabled = false);
+  document.querySelectorAll("button[data-act]").forEach(b => b.disabled = false);
 }
 
 // 파이썬 함수를 JS에서 부르는 도우미. pyCode는 파이썬 람다 문자열, args는 JS 값 배열.
@@ -210,7 +216,17 @@ const actions = {
   },
 };
 
-document.querySelectorAll("button").forEach(b => { b.disabled = true; b.onclick = () => actions[b.dataset.act](); });
+// 책 번호 고르기 버튼: 누르면 책 번호 칸을 그 번호로 바꿔 준다 (직접 입력도 그대로 가능)
+document.querySelectorAll(".chips").forEach(box => {
+  const input = $(box.dataset.for);
+  const mark = () => box.querySelectorAll(".chip").forEach(c => c.classList.toggle("on", c.textContent === input.value));
+  box.innerHTML = "<span>책 고르기</span>" + ["B001", "B002", "B003", "B004", "B005"]
+    .map(b => `<button type="button" class="chip">${b}</button>`).join("");
+  box.querySelectorAll(".chip").forEach(c => c.onclick = () => { input.value = c.textContent; mark(); });
+  input.addEventListener("input", mark);
+});
+
+document.querySelectorAll("button[data-act]").forEach(b => { b.disabled = true; b.onclick = () => actions[b.dataset.act](); });
 $("l-name").addEventListener("keydown", e => { if (e.key === "Enter" && py) actions.list(); });
 boot().catch(e => { $("status").textContent = "불러오기 실패: " + e; });
 </script>
