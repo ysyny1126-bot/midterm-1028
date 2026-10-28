@@ -72,6 +72,8 @@
   ul.loans .bk { font-family:"Jua", sans-serif; font-size:1.1rem; }
   ul.loans .due { margin-left:auto; background:var(--yellow); color:#5a4500; padding:2px 10px; border-radius:999px; font-size:.9rem; }
   .empty { color:var(--muted); text-align:center; margin:12px 0 0; }
+  .hint { margin:-4px 0 8px; font-size:.9rem; color:var(--muted); word-break:keep-all; }
+  .hint b { color:var(--sky-d); }
   footer { text-align:center; margin-top:8px; }
 </style>
 </head>
@@ -112,8 +114,9 @@
   <!-- 기능 4: 대출 목록 -->
   <section class="card c-list">
     <h2><span class="badge">🐥</span>빌린 책 목록</h2>
+    <p class="hint">👤 <b>책을 빌린 사람의 이름</b>을 넣으면, 그 사람이 지금 빌리고 있는 책과 반납 기한이 보여요.</p>
     <div class="row">
-      <input id="l-name" placeholder="이름" autocomplete="off">
+      <input id="l-name" placeholder="빌린 사람 이름 (예: 김민수)" aria-label="빌린 사람 이름" autocomplete="off">
       <button class="b-list" data-act="list">보기</button>
     </div>
     <div id="loans"></div>
@@ -196,7 +199,10 @@ const actions = {
     else show("err", "실패 😢", r.ok ? "반납이 거절됐어요" : "오류 — " + r.error);
     if (val("l-name")) renderLoans(val("l-name"));
   },
-  list() { renderLoans(val("l-name")); },
+  list() {
+    if (!val("l-name")) { $("loans").innerHTML = '<p class="empty">👆 빌린 사람 이름을 먼저 넣어 주세요</p>'; return; }
+    renderLoans(val("l-name"));
+  },
   reset() {
     py.runPython("state['obj'] = solution.LibraryLoan()");
     $("result").className = ""; renderLoans(val("l-name"));
